@@ -56,7 +56,7 @@ class Watcher:
         latest_file = max(list_of_files, key=os.path.getctime)
         if (self.last_file != latest_file) :
             self.last_file = latest_file
-            print("New file - %s." % self.last_file)
+            #print("New file - %s." % self.last_file)
             event = FileCreatedEvent(self.last_file)
             self.event_handler.on_any_event(event)
 
