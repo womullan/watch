@@ -107,7 +107,7 @@ class FitsHandler(FileSystemEventHandler):
         elif event.event_type == 'created':
         # Count fits files and render some of them ..
             print("FithsHandler Received - %s." % event.src_path)
-            if (event.src_path.endswith(".fits") or event.src_path.endswith(".fits.gz") ):
+            if (event.src_path.endswith(".fits") or event.src_path.endswith(".fits.gz") or event.src_path.endswith(".fits.fz")):
                 FitsHandler.COUNT = FitsHandler.COUNT + 1
                 if ((FitsHandler.COUNT % FitsHandler.NUM_TO_SKIP == 0) or Watcher.usels):
                     FitsHandler.render(event.src_path)
