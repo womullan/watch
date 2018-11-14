@@ -53,12 +53,15 @@ class Watcher:
 
     def checkNew(self):
         list_of_files = glob.glob(os.path.abspath(self.DIRECTORY_TO_WATCH)+'/*fit*') # * means all if need specific format then *.csv
-        latest_file = max(list_of_files, key=os.path.getctime)
-        if (self.last_file != latest_file) :
-            self.last_file = latest_file
-            #print("New file - %s." % self.last_file)
-            event = FileCreatedEvent(self.last_file)
-            self.event_handler.on_any_event(event)
+        list_of_files.sort()
+        #print(list_of_files)
+        if (len(list_of_files) >= 1):
+            latest_file = list_of_files[len(list_of_files)-1]
+            if (self.last_file != latest_file) :
+                self.last_file = latest_file
+                #print("New file - %s." % self.last_file)
+                event = FileCreatedEvent(self.last_file)
+                self.event_handler.on_any_event(event)
 
 
 class Handler(FileSystemEventHandler):
@@ -103,10 +106,10 @@ class FitsHandler(FileSystemEventHandler):
 
         elif event.event_type == 'created':
         # Count fits files and render some of them ..
-            print("Received - %s." % event.src_path)
+            print("FithsHandler Received - %s." % event.src_path)
             if (event.src_path.endswith(".fits") or event.src_path.endswith(".fits.gz") ):
                 FitsHandler.COUNT = FitsHandler.COUNT + 1
-                if (FitsHandler.COUNT % FitsHandler.NUM_TO_SKIP == 0):
+                if ((FitsHandler.COUNT % FitsHandler.NUM_TO_SKIP == 0) or Watcher.usels):
                     FitsHandler.render(event.src_path)
             else:
                 print("Skipping - %s." % event.src_path)
